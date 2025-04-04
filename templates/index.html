@@ -1,0 +1,94 @@
+<!--
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title>Flask App</title>
+</head>
+<body>
+    <h1>Flask App</h1>
+    <p>Welcome to the Flask App</p>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Prediction</title>
+</head>
+<body>
+    <h1>Wine Quality Prediction</h1>
+
+    <!-- <table>
+        <tr>
+            <th>Feature</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Density</td>
+            <td>The density of the wine.</td>
+        </tr>
+        <tr>
+            <td>PH</td>
+            <td>The pH level of the wine.</td>
+        </tr>
+        <tr>
+            <td>Alcohol</td>
+            <td>The alcohol content of the wine.</td>
+        </tr>
+    </table> -->
+    <form id="prediction_form">
+    <table>
+        <tr>
+            <td><label for="density">Density:</label></td>
+            <td><input type="text" id="density" name="density" required><br><br></td>
+        </tr>
+        <tr>
+            <td><label for="PH">PH:</label></td>
+            <td><input type="text" id="PH" name="PH" required><br><br></td>
+        </tr>
+        <tr>
+            <td><label for="alcohol">Alcohol:</label></td>
+            <td><input type="text" id="alcohol" name="alcohol" required><br><br></td>
+        </tr>
+        <tr>
+            <td><button type="button" onclick="predictQuality()">Predict Quality</button></td>
+    </tr>
+    </form>
+</table>
+    <div id="prediction_result" style="margin-top: 20px;">
+        </div>
+
+    <script>
+        function predictQuality() {
+            const density = document.getElementById("density").value;
+            const PH = document.getElementById("PH").value;
+            const alcohol = document.getElementById("alcohol").value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `variable1=${density}&variable2=${PH}&variable3=${alcohol}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById("prediction_result");
+                if (data.prediction !== undefined) {
+                    resultDiv.innerText = `Predicted Quality: ${data.prediction}`;
+                } else if (data.error !== undefined) {
+                    resultDiv.innerText = `Error: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const resultDiv = document.getElementById("prediction_result");
+                resultDiv.innerText = 'An error occurred during prediction.';
+            });
+        }
+    </script>
+</body>
+</html>

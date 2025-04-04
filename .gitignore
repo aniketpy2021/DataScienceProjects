@@ -1,0 +1,38 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+*.pyd
+
+# Distribution / packaging
+.eggs/
+dist/
+build/
+sdist/
+*.egg-info/
+wheelhouse/
+pip-wheel-metadata/
+.pytest_cache/
+.coverage
+coverage.xml
+.cache
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# My virtual environment
+env/
+
+# Other common ignores (adjust as needed)
+.DS_Store
+*.log
+*.tmp
+*.swp
+*.bak
+.idea/       # If using IntelliJ IDEA
+.vscode/     # If using VS Code
