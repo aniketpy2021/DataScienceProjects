@@ -1,94 +1,63 @@
-<!--
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
 <head>
-    <meta charset = "UTF-8">
-    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
-    <title>Flask App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Quality Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Flask App</h1>
-    <p>Welcome to the Flask App</p>
-</body>
-</html>
--->
+    <div class="container mt-5">
+        <header class="text-center mb-4">
+            <h1>Wine Quality Prediction</h1>
+            <p class="text-muted">Enter the features below to predict the quality of wine.</p>
+        </header>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sales Prediction</title>
-</head>
-<body>
-    <h1>Wine Quality Prediction</h1>
+        <form id="prediction-form" method="POST" action="/predict">
+            <div class="mb-3">
+                <label for="variable1" class="form-label">density</label>
+                <input type="number" step="any" class="form-control" id="variable1" name="variable1" placeholder="Enter value for density" required>
+            </div>
+            <div class="mb-3">
+                <label for="variable2" class="form-label">PH</label>
+                <input type="number" step="any" class="form-control" id="variable2" name="variable2" placeholder="Enter value for PH" required>
+            </div>
+            <div class="mb-3">
+                <label for="variable3" class="form-label">alcohol</label>
+                <input type="number" step="any" class="form-control" id="variable3" name="variable3" placeholder="Enter value for alcohol" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Predict</button>
+        </form>
 
-    <!-- <table>
-        <tr>
-            <th>Feature</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <td>Density</td>
-            <td>The density of the wine.</td>
-        </tr>
-        <tr>
-            <td>PH</td>
-            <td>The pH level of the wine.</td>
-        </tr>
-        <tr>
-            <td>Alcohol</td>
-            <td>The alcohol content of the wine.</td>
-        </tr>
-    </table> -->
-    <form id="prediction_form">
-    <table>
-        <tr>
-            <td><label for="density">Density:</label></td>
-            <td><input type="text" id="density" name="density" required><br><br></td>
-        </tr>
-        <tr>
-            <td><label for="PH">PH:</label></td>
-            <td><input type="text" id="PH" name="PH" required><br><br></td>
-        </tr>
-        <tr>
-            <td><label for="alcohol">Alcohol:</label></td>
-            <td><input type="text" id="alcohol" name="alcohol" required><br><br></td>
-        </tr>
-        <tr>
-            <td><button type="button" onclick="predictQuality()">Predict Quality</button></td>
-    </tr>
-    </form>
-</table>
-    <div id="prediction_result" style="margin-top: 20px;">
-        </div>
+        <div id="result" class="mt-4 text-center"></div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p class="text-muted">&copy; 2025 Wine Quality Predictor</p>
+    </footer>
 
     <script>
-        function predictQuality() {
-            const density = document.getElementById("density").value;
-            const PH = document.getElementById("PH").value;
-            const alcohol = document.getElementById("alcohol").value;
+        // Handle form submission dynamically
+        const form = document.getElementById('prediction-form');
+        const resultDiv = document.getElementById('result');
 
-            fetch('/predict', {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            resultDiv.textContent = "Loading...";
+
+            const formData = new FormData(form);
+            const response = await fetch('/predict', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `variable1=${density}&variable2=${PH}&variable3=${alcohol}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                const resultDiv = document.getElementById("prediction_result");
-                if (data.prediction !== undefined) {
-                    resultDiv.innerText = `Predicted Quality: ${data.prediction}`;
-                } else if (data.error !== undefined) {
-                    resultDiv.innerText = `Error: ${data.error}`;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                const resultDiv = document.getElementById("prediction_result");
-                resultDiv.innerText = 'An error occurred during prediction.';
+                body: formData
             });
-        }
+
+            const data = await response.json();
+            if (data.prediction) {
+                resultDiv.innerHTML = `<h4>Prediction: ${data.prediction}</h4>`;
+            } else {
+                resultDiv.innerHTML = `<p class="text-danger">Error: ${data.error}</p>`;
+            }
+        });
     </script>
 </body>
 </html>
